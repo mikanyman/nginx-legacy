@@ -1,0 +1,25 @@
+# www.synapse-computing.com
+# conf. model: https://code.djangoproject.com/wiki/DjangoAndNginx
+
+server {
+    listen 80;
+    server_name ldata.synapse-computing.com;
+    access_log /var/log/nginx/ldata-access.log;
+    error_log /var/log/nginx/ldata-error.log;
+
+    location /static/ { # STATIC_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/sumu/shared/ldata/sitestatic/;
+        expires 30d;
+    }
+
+    location /media/ { # MEDIA_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/sumu/shared/ldata/media/;
+        expires 30d;
+    }
+
+    location / {
+        uwsgi_pass unix:///run/uwsgi/app/ldata/socket;
+        include /etc/nginx/uwsgi_params; # itse lisatty
+    }
+}
+

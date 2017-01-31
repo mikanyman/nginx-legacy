@@ -1,0 +1,30 @@
+# conf. model: https://code.djangoproject.com/wiki/DjangoAndNginx
+# http://europatreffen.tallsmall.fi/fi/all/e0/frontpg/etusivu/
+
+server {
+    listen 80;
+    server_name europatreffen.tallsmall.fi;
+    access_log /var/log/nginx/europatreffen-access.log;
+    error_log /var/log/nginx/europatreffen-error.log;
+
+    #location /site_media/ {
+    #    alias /home/mnyman/.virtualenvs/specs/freeze/specs/site_media/;
+    #    expires 30d;
+    #}
+
+    #location /admin_media/ {
+    #    alias /home/mnyman/.virtualenvs/specs/lib/python2.7/site-packages/django/contrib/admin/media/;
+    #    expires 30d;
+    #}
+
+    #location /media/ { # MEDIA_URL
+    #    alias /home/mnyman/.virtualenvs/specs/freeze/specs/media/;
+    #    expires 30d;
+    #}
+
+    location / {
+        uwsgi_pass unix:///run/uwsgi/app/europatreffen/socket;
+        include /etc/nginx/uwsgi_params; # itse lisatty
+    }
+}
+

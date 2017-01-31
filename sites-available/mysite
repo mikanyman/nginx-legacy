@@ -1,0 +1,24 @@
+# conf. model: https://code.djangoproject.com/wiki/DjangoAndNginx
+
+server {
+    listen 80;
+    server_name mysite.synapse-computing.com;
+    rewrite  ^/$ /etusivu/ permanent;
+    access_log /var/log/nginx/mysite-access.log;
+    error_log /var/log/nginx/mysite-error.log;
+
+    location /static/ { # STATIC_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/mysite/staging/mysite/sitestatic/;
+        expires 30d;
+    }
+
+    location /media/ { # MEDIA_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/mysite/staging/mysite/media/;
+        expires 30d;
+    }
+
+    location / {
+        include /etc/nginx/uwsgi_params; # itse lisatty
+        uwsgi_pass unix:///run/uwsgi/app/mysite/socket;
+    }
+}

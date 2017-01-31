@@ -1,0 +1,72 @@
+# sumu-arkestra-01.synapse-computing.com
+# conf. model: https://code.djangoproject.com/wiki/DjangoAndNginx
+
+server {
+    listen 8001;
+    server_name sumu.synapse-computing.com;
+    access_log /var/log/nginx/sumu-access.log;
+    error_log /var/log/nginx/sumu-error.log;
+
+    # https://docs.djangoproject.com/en/dev/howto/static-files/ #serving-static-files-in-production
+    location /static/ { # STATIC_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/sumu/staging/sumu/sitestatic/; # STATIC_ROOT
+        expires 30d;
+    }
+
+    location /media/ { # MEDIA_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/sumu/staging/sumu/media/; # MEDIA_ROOT
+        expires 30d;
+    }
+
+    location / {
+        uwsgi_pass unix:///run/uwsgi/app/sumu/socket;
+        include /etc/nginx/uwsgi_params; # itse lisatty
+    }
+}
+
+
+server {
+    listen 8001;
+    server_name sumu-arkestra-01-example.synapse-computing.com;
+    access_log /var/log/nginx/sumu-arkestra-01-example-access.log;
+    error_log /var/log/nginx/sumu-arkestra-01-example-error.log;
+
+    # https://docs.djangoproject.com/en/dev/howto/static-files/ #serving-static-files-in-production
+    location /static/ { # STATIC_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/sumu-arkestra-01/example/sumu/sitestatic/; # STATIC_ROOT
+        expires 30d;
+    }
+
+    location /media/ { # MEDIA_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/sumu-arkestra-01/example/sumu/media/; # MEDIA_ROOT
+        expires 30d;
+    }
+
+    location / {
+        uwsgi_pass unix:///run/uwsgi/app/sumu-arkestra-01-example/socket;
+        include /etc/nginx/uwsgi_params; # itse lisatty
+    }
+}
+
+server {
+    listen 8001;
+    server_name sumu-arkestra-01-dev-01.synapse-computing.com;
+    access_log /var/log/nginx/sumu-arkestra-01-dev-01-access.log;
+    error_log /var/log/nginx/sumu-arkestra-01-dev-01-error.log;
+
+    location /static/ { # STATIC_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/sumu-arkestra-01/dev-01/sumu/sitestatic/; # STATIC_ROOT
+        expires 30d;
+    }
+
+    location /media/ { # MEDIA_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/sumu-arkestra-01/dev-01/sumu/media/; # MEDIA_ROOT
+        expires 30d;
+    }
+
+    location / {
+        uwsgi_pass unix:///run/uwsgi/app/sumu-arkestra-01-dev-01/socket;
+        include /etc/nginx/uwsgi_params; # itse lisatty
+    }
+}
+

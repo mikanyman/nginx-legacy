@@ -1,0 +1,64 @@
+# www.synapse-computing.com
+# conf. model: https://code.djangoproject.com/wiki/DjangoAndNginx
+
+server {
+    listen 80; #8001
+    server_name www.suomenmuinaistaideseura.fi;
+    rewrite  ^/$ /etusivu/ permanent;
+    access_log /var/log/nginx/sumu-access.log;
+    error_log /var/log/nginx/sumu-error.log;
+
+    location /static/ { # STATIC_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/sumu/staging/sumu/sitestatic/;
+        expires 30d;
+    }
+
+    location /media/ { # MEDIA_URL
+        alias /home/mnyman/.pythonbrew/venvs/Python-2.7.3/sumu/staging/sumu/media/;
+        expires 30d;
+    }
+
+    location /includes/ { # HELIN KARTTA
+        alias /home/heli/pub/rockart/includes/;
+        expires 30d;
+    }
+
+    location /maps/ { # HELIN KARTTA
+        alias /home/heli/pub/rockart/maps/;
+        expires 30d;
+    }
+
+    location /images/ { # HELIN KARTTA
+        alias /home/heli/pub/rockart/images/;
+        expires 30d;
+    }
+
+    location /js/ { # HELIN KARTTA
+        alias /home/heli/pub/rockart/js/;
+        expires 30d;
+    }
+
+    location /pdf/ { # HELIN KARTTA
+        alias /home/heli/pub/rockart/pdf/;
+        expires 30d;
+    }
+
+    location /tabs/ { # HELIN KARTTA
+        alias /home/heli/pub/rockart/tabs/;
+        expires 30d;
+    }
+
+    # Ohje: https://www.linode.com/docs/websites/nginx/nginx-and-phpfastcgi-on-ubuntu-12-04-lts-precise-pangolin
+    location ~ \.php$ {
+        include /etc/nginx/fastcgi_params;
+        fastcgi_pass unix:/var/run/php-fastcgi/php-fastcgi.socket;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME /home/heli/pub/rockart$fastcgi_script_name;
+    }
+
+    location / {
+        include /etc/nginx/uwsgi_params; # itse lisatty
+        uwsgi_pass unix:///run/uwsgi/app/sumu/socket;
+    }
+}
+

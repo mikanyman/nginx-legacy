@@ -1,0 +1,24 @@
+# conf. model: https://code.djangoproject.com/wiki/DjangoAndNginx
+# http://www.tallsmall.fi/fi/all/e0/frontpg/etusivu/
+#https://www.linode.com/docs/websites/nginx/nginx-and-phpfastcgi-on-ubuntu-12-04-lts-precise-pangolin
+
+server {
+    listen 80;
+    server_name ramap.suomenmuinaistaideseura.fi;
+    access_log /var/log/nginx/ramap-access.log;
+    error_log /var/log/nginx/ramap-error.log;
+    root /home/heli/pub/www/rockart;
+
+    location / {
+        index  index.html index.htm;
+    }
+
+    location ~ \.php$ {
+        include /etc/nginx/fastcgi_params;
+        fastcgi_pass unix:/var/run/php-fastcgi/php-fastcgi.socket;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME /home/heli/pub/www/rockart$fastcgi_script_name;
+    }
+
+}
+

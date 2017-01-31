@@ -1,0 +1,27 @@
+# churches.synapse-computing.com
+# conf. model: https://code.djangoproject.com/wiki/DjangoAndNginx
+
+server {
+    listen 8001;
+    server_name sdpub.synapse-computing.com;
+    access_log /var/log/nginx/sdpub.access.log;
+    error_log /var/log/nginx/sdpub.error.log;
+
+    # https://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-production
+    location /static/ { # STATIC_URL
+        alias /home/mnyman/.virtualenvs/sdpub/staging/SDPublisher/media/static/; # STATIC_ROOT
+        expires 30d;
+    }
+
+    location /media/static/ { # MEDIA_URL
+        alias /home/mnyman/.virtualenvs/sdpub/staging/SDPublisher/media/static/; # MEDIA_ROOT
+        expires 30d;
+    }
+
+    location / {
+        include fastcgi_params;
+        fastcgi_pass unix:/home/mnyman/.virtualenvs/sdpub/staging/SDPublisher/sdpub.socket;
+        fastcgi_split_path_info ^()(.*)$;
+
+    }
+}

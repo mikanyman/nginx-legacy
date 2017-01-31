@@ -1,0 +1,25 @@
+# www.synapse-computing.com
+# conf. model: https://code.djangoproject.com/wiki/DjangoAndNginx
+
+server {
+    listen 80;
+    server_name talls.tallsmall.fi;
+    rewrite  ^/$ /etusivu/ permanent;
+    access_log /var/log/nginx/talls-access.log;
+    error_log /var/log/nginx/talls-error.log;
+
+    location /static/ { # STATIC_URL
+        alias /home/mnyman/.virtualenvs/talls/staging/talls/sitestatic/;
+        expires 30d;
+    }
+
+    location /media/ { # MEDIA_URL
+        alias /home/mnyman/.virtualenvs/talls/staging/talls/media/;
+        expires 30d;
+    }
+
+    location / {
+        include /etc/nginx/uwsgi_params; # itse lisatty
+        uwsgi_pass unix:///run/uwsgi/app/talls/socket;
+    }
+}
